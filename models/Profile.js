@@ -96,23 +96,18 @@ const ProfileSchema = new Schema({
     social: {
         youtube: {
             type: String,
-            required: true
         },
         twitter: {
             type: String,
-            required: true
         },
         linkedin: {
             type: String,
-            required: true
         },
         facebook: {
             type: String,
-            required: true
         },
         instagram: {
             type: String,
-            required: true
         }
     },
     date: {
