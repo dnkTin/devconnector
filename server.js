@@ -1,6 +1,7 @@
 var express = require('express');
 const mongoose = require('mongoose');
-
+const bodyParser = require('body-parser');
+const passport = require('passport');
 const users = require('./routes/api/users');
 const profile = require('./routes/api/profile');
 const posts = require('./routes/api/posts');
@@ -20,9 +21,14 @@ mongoose
     .catch((error) => console.log('fail to connect cause: ' + JSON.stringify(error)))
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get('/', (req, res) => res.send('hello'))
+// passport middleware
+app.use(passport.initialize());
 
+// config passport 
+require('./config/passport')(passport);
 // create an port an run it on heroku
 const port = process.env.PORT || 5000;
 
