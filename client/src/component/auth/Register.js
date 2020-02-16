@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 import classnames from 'classnames';
-export default class Register extends Component {
+import { connect } from 'react-redux';
+import { registerUser } from '../../action/authAction'
+class Register extends Component {
     constructor() {
         super();
         this.state = {
@@ -121,3 +123,4 @@ export default class Register extends Component {
         )
     }
 }
+export default connect(null, registerUser)(Register);
