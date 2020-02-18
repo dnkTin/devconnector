@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import axios from 'axios';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
-import { registerUser } from '../../action/authAction'
+import { registerUser } from '../../action/authAction';
+import { withRouter } from 'react-router-dom';
 class Register extends Component {
     constructor() {
         super();
@@ -15,6 +16,17 @@ class Register extends Component {
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+    }
+    componentDidMount() {
+        // after login, user can not go to login page
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/dashboard');
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.errors) {
+            this.setState({ errors: nextProps.errors })
+        }
     }
     onChange(e) {
         console.log(e.target.type);
@@ -34,15 +46,8 @@ class Register extends Component {
             password2: this.state.password2,
         };
         // console.log(newUser);
-        axios
-            .post('/api/users/register/', newUser)
-            .then((user) => {
-                console.log(user);
-            })
-            .catch((error) => {
-                console.log(JSON.stringify(error.response));
-                this.setState({ errors: error.response.data });
-            });
+
+        this.props.registerUser(newUser, this.props.history);
     }
     render() {
         const { errors } = this.state;
@@ -123,4 +128,14 @@ class Register extends Component {
         )
     }
 }
-export default connect(null, registerUser)(Register);
+
+Register.propTypes = {
+    registerUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
+}
+const mapStateToProps = (state) => ({
+    auth: state.auth,
+    errors: state.errors
+})
+export default connect(mapStateToProps, { registerUser })(withRouter(Register));

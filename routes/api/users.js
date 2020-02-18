@@ -82,13 +82,13 @@ router.post('/login', (req, res) => {
     const password = req.body.password;
     User.findOne({ email }).then((user) => {
         if (!user) {
-            res.status(404).json('User not found');
+            res.status(404).json({ email: 'User not found' });
         }
 
         // check password
         bcrypt.compare(password, user.password).then(onFullFilled => {
             if (!onFullFilled) {
-                res.status(404).json('Password not correct').end();
+                res.status(404).json({ password: 'Password not correct' }).end();
             }
 
             // create JWT payload
